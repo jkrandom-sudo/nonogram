@@ -11,6 +11,24 @@ from typing import List, Optional, Tuple
 from board import EMPTY, FILLED, MARKED
 
 
+def _validate_line_inputs(length: int, clues: List[int], current: List[int]) -> None:
+    """Validate the public line-solver contract before enumeration."""
+    if length < 0:
+        raise ValueError("length must be non-negative")
+    if len(current) != length:
+        raise ValueError("current length must match length")
+    if any(state not in (EMPTY, FILLED, MARKED) for state in current):
+        raise ValueError("current cells must be EMPTY, FILLED, or MARKED")
+    if clues == [0]:
+        return
+    if not clues:
+        return
+    if any(clue <= 0 for clue in clues):
+        raise ValueError("clues must be positive integers, or [0] for an empty line")
+    if sum(clues) + len(clues) - 1 > length:
+        raise ValueError("clues do not fit within line length")
+
+
 def line_placements(length: int, clues: List[int], current: List[int]):
     """Yield all valid fill patterns for `clues` on a line of `length`,
     consistent with the player's `current` state.
@@ -21,6 +39,8 @@ def line_placements(length: int, clues: List[int], current: List[int]):
       - Where `current[i] == MARKED`, the pattern has 0.
       - Where `current[i] == EMPTY`, no constraint.
     """
+    _validate_line_inputs(length, clues, current)
+
     if not clues or clues == [0]:
         # All-empty line is the only placement
         pattern = [0] * length

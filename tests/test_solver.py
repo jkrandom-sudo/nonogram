@@ -58,6 +58,16 @@ class TestLinePlacements(unittest.TestCase):
             (0, 0, 1, 1, 1),
         })
 
+    def test_invalid_current_length_rejected(self):
+        with self.assertRaises(ValueError):
+            list(solver_mod.line_placements(5, [3], [EMPTY] * 4))
+
+    def test_invalid_clues_rejected(self):
+        for clues in ([0, 1], [-1], [2, 2]):
+            with self.subTest(clues=clues):
+                with self.assertRaises(ValueError):
+                    list(solver_mod.line_placements(3, clues, [EMPTY] * 3))
+
 
 class TestForcedCells(unittest.TestCase):
     def test_forced_full(self):
