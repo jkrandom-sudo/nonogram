@@ -180,7 +180,7 @@ class TestPlayRound(unittest.TestCase):
                                                   "size": 2, "solution": SIMPLE_SOL}):
                 game_mod.play_round({"lang": "en", "size": 2}, sound,
                                     inp, out, rng=random.Random(0))
-        self.assertIn("Invalid", out.getvalue())
+        self.assertIn("out of bounds", out.getvalue())
 
 
 class TestMainMenu(unittest.TestCase):

@@ -149,6 +149,10 @@ def play_round(s: dict, sound: Sound, input_func, output, rng=None) -> Optional[
             write(t(lang, "bad_format"))
             continue
         action, r, c = parsed
+        if not board.in_bounds(r, c):
+            write(t(lang, "out_of_bounds", row=r, col=c))
+            sound.illegal()
+            continue
         try:
             if action == "fill":
                 board.fill(r, c)
@@ -158,8 +162,8 @@ def play_round(s: dict, sound: Sound, input_func, output, rng=None) -> Optional[
                 sound.mark()
             else:
                 board.erase(r, c)
-        except IllegalMove:
-            write(t(lang, "illegal"))
+        except IllegalMove as e:
+            write(t(lang, "illegal") + f" ({e})")
             sound.illegal()
             continue
         moves += 1
